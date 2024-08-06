@@ -89,6 +89,10 @@ export default function PlannerScreen() {
         />
       )}
       <Button title="Save Plan" onPress={handleSubmit} color="#FF5703" />
+      
+      {/* Spacer View */}
+      <View style={{ height: 20 }} />
+      
       <Button title="Go to Calendar" onPress={() => router.push('/calendar')} color="#FF5703" />
 
       <View style={styles.tableContainer}>
