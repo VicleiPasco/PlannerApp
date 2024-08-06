@@ -6,7 +6,7 @@ import { Calendar } from 'react-native-calendars';
 export default function CalendarScreen() {
   const [selectedDate, setSelectedDate] = useState('');
 
-  const onDayPress = day => {
+  const onDayPress = (day: any) => {
     setSelectedDate(day.dateString);
     alert(`Selected date: ${day.dateString}`);
   };
@@ -33,6 +33,11 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 18,
     marginBottom: 10,
+    color: '#FFFDD0', // Cream text
+  },
+  title: {
+    fontSize: 24,
+    marginBottom: 20,
     color: '#FFFDD0', // Cream text
   },
 });
