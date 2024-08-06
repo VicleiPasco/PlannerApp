@@ -1,79 +1,106 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet, FlatList, TouchableOpacity } from 'react-native';
-import { useRouter } from 'expo-router';
+import { View, Text, TextInput, Button, StyleSheet, FlatList, Pressable, Platform, Alert } from 'react-native';
+import { useRouter } from 'expo-router'; 
+import DateTimePicker from '@react-native-community/datetimepicker'; 
  
 export default function PlannerScreen() {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
-  const [date, setDate] = useState('');
+  const [date, setDate] = useState(new Date());
+  const [dateString, setDateString] = useState('');
   const [plans, setPlans] = useState([]);
+  const [showDatePicker, setShowDatePicker] = useState(false);
   const router = useRouter();
  
   const handleSubmit = () => {
-    setPlans([...plans, { title, description, date }]);
+    
+    const newPlan = { id: Math.random().toString(), title, description, date: dateString };
+    
+    setPlans([...plans, newPlan]);
+    
     setTitle('');
     setDescription('');
-    setDate('');
+    setDate(new Date());
+    setDateString('');
   };
  
-  const handleDelete = (index: number) => {
-    setPlans(plans.filter((_, i) => i !== index));
+  const handleDateChange = (event: any, selectedDate: Date | undefined) => {
+    const currentDate = selectedDate || date;
+    setShowDatePicker(Platform.OS === 'ios');
+    setDate(currentDate);
+    setDateString(currentDate.toDateString());
   };
  
-  const renderItem = ({ item, index }: { item: any; index: number }) => (
-    <View style={styles.tableRow}>
-      <Text style={styles.tableCell}>{item.title}</Text>
-      <Text style={styles.tableCell}>{item.description}</Text>
-      <Text style={styles.tableCell}>{item.date}</Text>
-      <TouchableOpacity onPress={() => handleDelete(index)} style={styles.deleteButton}>
-        <Text style={styles.deleteButtonText}>Delete</Text>
-      </TouchableOpacity>
-    </View>
+  const handleDelete = (id: string) => {
+    Alert.alert(
+      'Delete Plan',
+      'Are you sure you want to delete this plan?',
+      [
+        { text: 'Cancel', style: 'cancel' },
+        { text: 'OK', onPress: () => setPlans(plans.filter(plan => plan.id !== id)) },
+      ],
+      { cancelable: false }
+    );
+  };
+ 
+  const renderItem = ({ item }: any) => (
+<View style={styles.tableRow}>
+<Text style={styles.tableCell}>{item.title}</Text>
+<Text style={styles.tableCell}>{item.description}</Text>
+<Text style={styles.tableCell}>{item.date}</Text>
+<Pressable onPress={() => handleDelete(item.id)} style={styles.deleteButton}>
+<Text style={styles.deleteButtonText}>Delete</Text>
+</Pressable>
+</View>
   );
  
   return (
-    <View style={styles.container}>
-      <Text style={styles.label}>Title</Text>
-      <TextInput
+<View style={styles.container}>
+<Text style={styles.label}>Title</Text>
+<TextInput 
         style={styles.input}
         value={title}
         onChangeText={setTitle}
         placeholder="Enter title"
-        placeholderTextColor="#FFFDD0"
+        placeholderTextColor="cream"
       />
-      <Text style={styles.label}>Description</Text>
-      <TextInput
+<Text style={styles.label}>Description</Text>
+<TextInput 
         style={styles.input}
         value={description}
         onChangeText={setDescription}
         placeholder="Enter description"
-        placeholderTextColor="#FFFDD0"
+        placeholderTextColor="cream"
       />
-      <Text style={styles.label}>Date</Text>
-      <TextInput
-        style={styles.input}
-        value={date}
-        onChangeText={setDate}
-        placeholder="Enter date"
-        placeholderTextColor="#FFFDD0"
-      />
-      <Button title="Save Plan" onPress={handleSubmit} />
-      <Button title="Go to Calendar" onPress={() => router.push('/calendar')} />
+<Text style={styles.label}>Date</Text>
+<Pressable onPress={() => setShowDatePicker(true)} style={styles.datePickerButton}>
+<Text style={styles.datePickerText}>{dateString || 'Select date'}</Text>
+</Pressable>
+      {showDatePicker && (
+<DateTimePicker
+          value={date}
+          mode="date"
+          display="default"
+          onChange={handleDateChange}
+        />
+      )}
+<Button title="Save Plan" onPress={handleSubmit} />
+<Button title="Go to Calendar" onPress={() => router.push('/calendar')} />
  
       <View style={styles.tableContainer}>
-        <View style={styles.tableHeader}>
-          <Text style={styles.tableHeaderText}>Title</Text>
-          <Text style={styles.tableHeaderText}>Description</Text>
-          <Text style={styles.tableHeaderText}>Date</Text>
-          <Text style={styles.tableHeaderText}>Actions</Text>
-        </View>
-        <FlatList
+<View style={styles.tableHeader}>
+<Text style={styles.tableHeaderText}>Title</Text>
+<Text style={styles.tableHeaderText}>Description</Text>
+<Text style={styles.tableHeaderText}>Date</Text>
+<Text style={styles.tableHeaderText}>Actions</Text>
+</View>
+<FlatList
           data={plans}
           renderItem={renderItem}
-          keyExtractor={(item, index) => index.toString()}
+          keyExtractor={item => item.id}
         />
-      </View>
-    </View>
+</View>
+</View>
   );
 }
  
@@ -86,52 +113,65 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 18,
     marginBottom: 5,
-    color: '#FFFDD0',
+    color: 'cream',
   },
   input: {
     height: 40,
-    borderColor: '#FFFDD0',
+    borderColor: 'cream',
     borderWidth: 1,
     marginBottom: 15,
     paddingHorizontal: 10,
-    color: '#FFFDD0',
+    color: 'cream',
+  },
+  datePickerButton: {
+    height: 40,
+    borderColor: 'cream',
+    borderWidth: 1,
+    marginBottom: 15,
+    justifyContent: 'center',
+    paddingHorizontal: 10,
+  },
+  datePickerText: {
+    color: 'cream',
+    fontSize: 16,
   },
   tableContainer: {
     marginTop: 20,
     borderTopWidth: 1,
-    borderTopColor: '#FFFDD0',
+    borderTopColor: 'cream',
   },
   tableHeader: {
     flexDirection: 'row',
     borderBottomWidth: 1,
-    borderBottomColor: '#FFFDD0',
+    borderBottomColor: 'cream',
     paddingBottom: 10,
   },
   tableHeaderText: {
     flex: 1,
     fontSize: 16,
-    color: '#FFFDD0',
+    color: 'cream',
   },
   tableRow: {
     flexDirection: 'row',
     borderBottomWidth: 1,
-    borderBottomColor: '#FFFDD0',
+    borderBottomColor: 'cream',
     paddingVertical: 10,
-    alignItems: 'center',
   },
   tableCell: {
     flex: 1,
     fontSize: 16,
-    color: '#FFFDD0',
+    color: 'cream',
   },
   deleteButton: {
-    backgroundColor: '#FF6347',
-    padding: 10,
+    backgroundColor: 'red',
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingVertical: 5,
+    paddingHorizontal: 10,
     borderRadius: 5,
-    marginLeft: 10,
   },
   deleteButtonText: {
-    color: '#FFF',
+    color: 'white',
+    fontSize: 16,
   },
 });
- 
