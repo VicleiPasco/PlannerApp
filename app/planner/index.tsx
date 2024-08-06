@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, Button, StyleSheet, FlatList } from 'react-native';
-import { useRouter } from 'expo-router'; // Assuming you have this installed
+import { useRouter } from 'expo-router';
  
 export default function PlannerScreen() {
   const [title, setTitle] = useState('');
@@ -34,7 +34,7 @@ export default function PlannerScreen() {
         value={title}
         onChangeText={setTitle}
         placeholder="Enter title"
-        placeholderTextColor="cream"
+        placeholderTextColor="#FFFDD0"
       />
 <Text style={styles.label}>Description</Text>
 <TextInput 
@@ -42,7 +42,7 @@ export default function PlannerScreen() {
         value={description}
         onChangeText={setDescription}
         placeholder="Enter description"
-        placeholderTextColor="cream"
+        placeholderTextColor="#FFFDD0"
       />
 <Text style={styles.label}>Date</Text>
 <TextInput 
@@ -50,7 +50,7 @@ export default function PlannerScreen() {
         value={date}
         onChangeText={setDate}
         placeholder="Enter date"
-        placeholderTextColor="cream"
+        placeholderTextColor="#FFFDD0"
       />
 <Button title="Save Plan" onPress={handleSubmit} />
 <Button title="Go to Calendar" onPress={() => router.push('/calendar')} />
@@ -80,41 +80,41 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 18,
     marginBottom: 5,
-    color: 'cream',
+    color: '#FFFDD0',
   },
   input: {
     height: 40,
-    borderColor: 'cream',
+    borderColor: '#FFFDD0',
     borderWidth: 1,
     marginBottom: 15,
     paddingHorizontal: 10,
-    color: 'cream',
+    color: '#FFFDD0',
   },
   tableContainer: {
     marginTop: 20,
     borderTopWidth: 1,
-    borderTopColor: 'cream',
+    borderTopColor: '#FFFDD0',
   },
   tableHeader: {
     flexDirection: 'row',
     borderBottomWidth: 1,
-    borderBottomColor: 'cream',
+    borderBottomColor: '#FFFDD0',
     paddingBottom: 10,
   },
   tableHeaderText: {
     flex: 1,
     fontSize: 16,
-    color: 'cream',
+    color: '#FFFDD0',
   },
   tableRow: {
     flexDirection: 'row',
     borderBottomWidth: 1,
-    borderBottomColor: 'cream',
+    borderBottomColor: '#FFFDD0',
     paddingVertical: 10,
   },
   tableCell: {
     flex: 1,
     fontSize: 16,
-    color: 'cream',
+    color: '#FFFDD0',
   },
 });
