@@ -1,37 +1,29 @@
 import React from 'react';
 import { View, Text, Button, StyleSheet } from 'react-native';
 import { useRouter } from 'expo-router';
- 
+
 export default function HomeScreen() {
   const router = useRouter();
- 
-  const goToPlanner = () => {
-    router.push('/planner');
-  };
- 
-  const goToCalendar = () => {
-    router.push('/calendar');
-  };
- 
+
   return (
-<View style={styles.container}>
-<Text style={styles.title}>Welcome to the Study Planner App</Text>
-<Button title="Go to Planner" onPress={goToPlanner} />
-<Button title="Go to Calendar" onPress={goToCalendar} />
-</View>
+    <View style={styles.container}>
+      <Text style={styles.title}>Welcome to the Study Planner App</Text>
+      <Button title="Go to Planner" onPress={() => router.push('/planner')} />
+      <Button title="Go to Calendar" onPress={() => router.push('/calendar')} />
+    </View>
   );
 }
- 
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
+    justifyContent: 'center', 
     alignItems: 'center',
-    backgroundColor: '#800000', // Maroon background
+    backgroundColor: '#800000',
   },
   title: {
     fontSize: 24,
     marginBottom: 20,
-    color: '#FFFDD0', // Cream text
+    color: '#FFFDD0',
   },
 });

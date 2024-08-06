@@ -1,23 +1,26 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, Button, StyleSheet, FlatList, Pressable, Platform, Alert } from 'react-native';
 import { useRouter } from 'expo-router';
-import DateTimePicker from '@react-native-community/datetimepicker';
+import DateTimePicker from '@react-native-community/datetimepicker'; 
+import { usePlans } from '../plancontext';
 
 export default function PlannerScreen() {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [date, setDate] = useState(new Date());
   const [dateString, setDateString] = useState('');
-  const [plans, setPlans] = useState([]);
   const [showDatePicker, setShowDatePicker] = useState(false);
+  const { addPlan, removePlan, plans } = usePlans();
   const router = useRouter();
 
   const handleSubmit = () => {
-    // Generate a unique ID for each plan
-    const newPlan = { id: Math.random().toString(), title, description, date: dateString };
-    // Add the new plan to the list
-    setPlans([...plans, newPlan]);
-    // Reset the form
+    const newPlan = {
+      id: Math.random().toString(), 
+      title,
+      description,
+      date: dateString,
+    };
+    addPlan(newPlan);
     setTitle('');
     setDescription('');
     setDate(new Date());
@@ -28,7 +31,7 @@ export default function PlannerScreen() {
     const currentDate = selectedDate || date;
     setShowDatePicker(Platform.OS === 'ios');
     setDate(currentDate);
-    setDateString(currentDate.toDateString());
+    setDateString(currentDate.toISOString().split('T')[0]);
   };
 
   const handleDelete = (id: string) => {
@@ -37,7 +40,7 @@ export default function PlannerScreen() {
       'Are you sure you want to delete this plan?',
       [
         { text: 'Cancel', style: 'cancel' },
-        { text: 'OK', onPress: () => setPlans(plans.filter(plan => plan.id !== id)) },
+        { text: 'OK', onPress: () => removePlan(id) },
       ],
       { cancelable: false }
     );
