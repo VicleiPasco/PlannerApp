@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet, FlatList } from 'react-native';
+import { View, Text, TextInput, Button, StyleSheet, FlatList, TouchableOpacity } from 'react-native';
 import { useRouter } from 'expo-router';
  
 export default function PlannerScreen() {
@@ -10,64 +10,70 @@ export default function PlannerScreen() {
   const router = useRouter();
  
   const handleSubmit = () => {
-    // Add the new plan to the list
     setPlans([...plans, { title, description, date }]);
-    // Reset the form
     setTitle('');
     setDescription('');
     setDate('');
   };
  
-  const renderItem = ({ item }: any) => (
-<View style={styles.tableRow}>
-<Text style={styles.tableCell}>{item.title}</Text>
-<Text style={styles.tableCell}>{item.description}</Text>
-<Text style={styles.tableCell}>{item.date}</Text>
-</View>
+  const handleDelete = (index: number) => {
+    setPlans(plans.filter((_, i) => i !== index));
+  };
+ 
+  const renderItem = ({ item, index }: { item: any; index: number }) => (
+    <View style={styles.tableRow}>
+      <Text style={styles.tableCell}>{item.title}</Text>
+      <Text style={styles.tableCell}>{item.description}</Text>
+      <Text style={styles.tableCell}>{item.date}</Text>
+      <TouchableOpacity onPress={() => handleDelete(index)} style={styles.deleteButton}>
+        <Text style={styles.deleteButtonText}>Delete</Text>
+      </TouchableOpacity>
+    </View>
   );
  
   return (
-<View style={styles.container}>
-<Text style={styles.label}>Title</Text>
-<TextInput 
+    <View style={styles.container}>
+      <Text style={styles.label}>Title</Text>
+      <TextInput
         style={styles.input}
         value={title}
         onChangeText={setTitle}
         placeholder="Enter title"
         placeholderTextColor="#FFFDD0"
       />
-<Text style={styles.label}>Description</Text>
-<TextInput 
+      <Text style={styles.label}>Description</Text>
+      <TextInput
         style={styles.input}
         value={description}
         onChangeText={setDescription}
         placeholder="Enter description"
         placeholderTextColor="#FFFDD0"
       />
-<Text style={styles.label}>Date</Text>
-<TextInput 
+      <Text style={styles.label}>Date</Text>
+      <TextInput
         style={styles.input}
         value={date}
         onChangeText={setDate}
         placeholder="Enter date"
         placeholderTextColor="#FFFDD0"
       />
-<Button title="Save Plan" onPress={handleSubmit} />
-<Button title="Go to Calendar" onPress={() => router.push('/calendar')} />
+      <Button title="Save Plan" onPress={handleSubmit} />
+      <Button title="Go to Calendar" onPress={() => router.push('/calendar')} />
  
       <View style={styles.tableContainer}>
-<View style={styles.tableHeader}>
-<Text style={styles.tableHeaderText}>Title</Text>
-<Text style={styles.tableHeaderText}>Description</Text>
-<Text style={styles.tableHeaderText}>Date</Text>
-</View>
-<FlatList
+        <View style={styles.tableHeader}>
+          <Text style={styles.tableHeaderText}>Title</Text>
+          <Text style={styles.tableHeaderText}>Description</Text>
+          <Text style={styles.tableHeaderText}>Date</Text>
+          <Text style={styles.tableHeaderText}>Actions</Text>
+        </View>
+        <FlatList
           data={plans}
           renderItem={renderItem}
           keyExtractor={(item, index) => index.toString()}
         />
-</View>
-</View>
+      </View>
+    </View>
   );
 }
  
@@ -111,10 +117,21 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: '#FFFDD0',
     paddingVertical: 10,
+    alignItems: 'center',
   },
   tableCell: {
     flex: 1,
     fontSize: 16,
     color: '#FFFDD0',
   },
+  deleteButton: {
+    backgroundColor: '#FF6347',
+    padding: 10,
+    borderRadius: 5,
+    marginLeft: 10,
+  },
+  deleteButtonText: {
+    color: '#FFF',
+  },
 });
+ 
