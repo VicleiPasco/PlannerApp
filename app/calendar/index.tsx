@@ -1,10 +1,11 @@
-
 import React, { useState } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, Button } from 'react-native';
 import { Calendar } from 'react-native-calendars';
+import { useRouter } from 'expo-router';
 
 export default function CalendarScreen() {
   const [selectedDate, setSelectedDate] = useState('');
+  const router = useRouter();
 
   const onDayPress = (day: any) => {
     setSelectedDate(day.dateString);
@@ -13,6 +14,7 @@ export default function CalendarScreen() {
 
   return (
     <View style={styles.container}>
+      <Button title="Go Back" onPress={() => router.back()} color="#FF5703" />
       <Text style={styles.label}>Select a Date</Text>
       <Calendar
         onDayPress={onDayPress}
@@ -27,17 +29,12 @@ export default function CalendarScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#800000', // Maroon background
+    backgroundColor: 'maroon',
     padding: 20,
   },
   label: {
     fontSize: 18,
     marginBottom: 10,
-    color: '#FFFDD0', // Cream text
-  },
-  title: {
-    fontSize: 24,
-    marginBottom: 20,
-    color: '#FFFDD0', // Cream text
+    color: '#FFFDD0',
   },
 });
